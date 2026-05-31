@@ -168,7 +168,7 @@ Organized sections for:
 
 ## File Structure
 ```
-C:\Users\migue\TextFlashAnimator\
+C:\Users\name\TextFlashAnimator\
 ├── index.html       (Main structure - 240+ lines)
 ├── styles.css       (Complete styling - 600+ lines)
 └── script.js        (Full functionality - 700+ lines)
