@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Flash Animator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>✨ Text Flash Animator</h1>
+                <p class="subtitle">Create stunning text animations and popups</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon" id="exportBtn" title="Export settings">💾</button>
+                <button class="btn-icon" id="importBtn" title="Import settings">📂</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-tab="animator">🎬 Text Animator</button>
+                <button class="nav-btn" data-tab="popup">💬 Popup Creator</button>
+                <button class="nav-btn" data-tab="templates">📋 Templates</button>
+            </nav>
+
+            <!-- Main Content Area -->
+            <div class="content-wrapper">
+                <!-- Preview Area -->
+                <div class="preview-section">
+                    <div class="preview-header">
+                        <h2>Preview</h2>
+                        <div class="preview-controls">
+                            <button class="btn-small" id="playBtn">▶ Play</button>
+                            <button class="btn-small" id="stopBtn">⏹ Stop</button>
+                            <button class="btn-small" id="resetBtn">↻ Reset</button>
+                        </div>
+                    </div>
+                    <div class="preview-canvas" id="previewCanvas">
+                        <div class="preview-placeholder">Preview will appear here</div>
+                    </div>
+                </div>
+
+                <!-- Control Panel -->
+                <div class="control-panel">
+                    <!-- Text Animator Tab -->
+                    <div class="tab-content active" id="animator-tab">
+                        <h3>Text Layers</h3>
+                        <div id="textLayersContainer" class="layers-list"></div>
+                        <div class="control-group">
+                            <label>Primary Text</label>
+                            <input type="text" class="form-input" id="animationText" placeholder="Enter text to animate..." value="Flash This!">
+                        </div>
+                        <button class="btn-primary" id="addLayerBtn" style="margin-bottom: 20px; padding: 8px 12px; font-size: 12px;">+ Add Text Layer</button>
+
+                        <h3>Layer Spacing</h3>
+                        <div class="control-group">
+                            <input type="range" id="layerGap" min="0" max="80" step="2" value="26" class="slider">
+                            <span class="slider-value" id="layerGapValue">26px</span>
+                        </div>
+
+                        <h3>Animation Type</h3>
+                        <div class="control-group">
+                            <select class="form-select" id="animationType">
+                                <option value="ltr">Left to Right</option>
+                                <option value="rtl">Right to Left</option>
+                                <option value="ttb">Top to Bottom</option>
+                                <option value="btt">Bottom to Top</option>
+                                <option value="diagonal">Diagonal</option>
+                                <option value="flash">Flash (Static)</option>
+                                <option value="bounce">Bounce</option>
+                                <option value="rotate">Rotating</option>
+                                <option value="zigzag">ZigZag</option>
+                            </select>
+                        </div>
+
+                        <h3>Animation Speed</h3>
+                        <div class="control-group">
+                            <input type="range" id="animationSpeed" min="0.5" max="5" step="0.1" value="1" class="slider">
+                            <span class="slider-value" id="speedValue">1x</span>
+                        </div>
+
+                        <h3>Text Size</h3>
+                        <div class="control-group">
+                            <input type="range" id="textSize" min="20" max="200" step="5" value="60" class="slider">
+                            <span class="slider-value" id="sizeValue">60px</span>
+                        </div>
+
+                        <h3>Text Rotation</h3>
+                        <div class="control-group">
+                            <input type="range" id="textRotation" min="0" max="360" step="5" value="0" class="slider">
+                            <span class="slider-value" id="rotationValue">0°</span>
+                        </div>
+
+                        <h3>Text Tilt/Skew</h3>
+                        <div class="control-group">
+                            <label>Horizontal Tilt:</label>
+                            <input type="range" id="textSkewX" min="-45" max="45" step="1" value="0" class="slider">
+                            <span class="slider-value" id="skewXValue">0°</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Vertical Tilt:</label>
+                            <input type="range" id="textSkewY" min="-45" max="45" step="1" value="0" class="slider">
+                            <span class="slider-value" id="skewYValue">0°</span>
+                        </div>
+
+                        <h3>Text Color</h3>
+                        <div class="control-group">
+                            <input type="color" id="textColor" value="#00ff00" class="color-picker">
+                            <span id="colorValue">#00ff00</span>
+                        </div>
+
+                        <h3>Background Type</h3>
+                        <div class="control-group">
+                            <select class="form-select" id="backgroundType">
+                                <option value="solid">Solid Color</option>
+                                <option value="gradient">Gradient</option>
+                                <option value="transparent">Transparent</option>
+                            </select>
+                        </div>
+
+                        <h3>Background Color</h3>
+                        <div class="control-group">
+                            <input type="color" id="backgroundColor" value="#000000" class="color-picker">
+                            <span id="bgColorValue">#000000</span>
+                        </div>
+
+                        <h3 id="gradientLabel" style="display: none;">Gradient End Color</h3>
+                        <div class="control-group" id="gradientColorGroup" style="display: none;">
+                            <input type="color" id="gradientColor" value="#ff00ff" class="color-picker">
+                            <span id="gradColorValue">#ff00ff</span>
+                        </div>
+
+                        <h3>Font Family</h3>
+                        <div class="control-group">
+                            <select class="form-select" id="fontFamily">
+                                <option value="'Arial', sans-serif">Arial</option>
+                                <option value="'Georgia', serif">Georgia</option>
+                                <option value="'Courier New', monospace">Courier New</option>
+                                <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+                                <option value="'Impact', sans-serif">Impact</option>
+                                <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                                <option value="'Times New Roman', serif">Times New Roman</option>
+                            </select>
+                        </div>
+
+                        <h3>Text Effects</h3>
+                        <div class="control-group checkbox-group">
+                            <label><input type="checkbox" id="boldText"> Bold</label>
+                            <label><input type="checkbox" id="italicText"> Italic</label>
+                            <label><input type="checkbox" id="underlineText"> Underline</label>
+                        </div>
+
+                        <h3>Text Shadow</h3>
+                        <div class="control-group">
+                            <label>Offset X:</label>
+                            <input type="range" id="shadowX" min="-20" max="20" value="0" class="slider">
+                            <span id="shadowXValue">0px</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Offset Y:</label>
+                            <input type="range" id="shadowY" min="-20" max="20" value="0" class="slider">
+                            <span id="shadowYValue">0px</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Blur:</label>
+                            <input type="range" id="shadowBlur" min="0" max="30" value="0" class="slider">
+                            <span id="shadowBlurValue">0px</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Shadow Color:</label>
+                            <input type="color" id="shadowColor" value="#000000" class="color-picker">
+                        </div>
+
+                        <h3>Glow Effect</h3>
+                        <div class="control-group">
+                            <label>Glow Intensity:</label>
+                            <input type="range" id="glowIntensity" min="0" max="50" value="0" class="slider">
+                            <span id="glowValue">0px</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Glow Color:</label>
+                            <input type="color" id="glowColor" value="#00ff00" class="color-picker">
+                        </div>
+
+                        <h3>Outline/Stroke</h3>
+                        <div class="control-group">
+                            <label>Stroke Width:</label>
+                            <input type="range" id="strokeWidth" min="0" max="10" step="0.5" value="0" class="slider">
+                            <span id="strokeValue">0px</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Stroke Color:</label>
+                            <input type="color" id="strokeColor" value="#ffffff" class="color-picker">
+                        </div>
+
+                        <h3>Animation Options</h3>
+                        <div class="control-group checkbox-group">
+                            <label><input type="checkbox" id="loopAnimation" checked> Continuous Loop</label>
+                            <label><input type="checkbox" id="randomPattern"> Random Pattern</label>
+                        </div>
+
+                        <h3>Visual Effects</h3>
+                        <div class="control-group">
+                            <select class="form-select" id="visualEffect">
+                                <option value="none">None</option>
+                                <option value="sparkles">Sparkles</option>
+                                <option value="particles">Particles</option>
+                                <option value="fire">Fire</option>
+                                <option value="lightning">Lightning</option>
+                                <option value="confetti">Confetti</option>
+                                <option value="matrix">Matrix Rain</option>
+                                <option value="shapes">Floating Shapes</option>
+                                <option value="emojis">Floating Emojis</option>
+                            </select>
+                        </div>
+
+                        <h3>Screen Effects</h3>
+                        <div class="control-group">
+                            <label>Flash Intensity:</label>
+                            <input type="range" id="flashIntensity" min="0" max="1" step="0.1" value="0" class="slider">
+                            <span id="flashValue">0%</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Motion Blur:</label>
+                            <input type="range" id="motionBlur" min="0" max="20" step="1" value="0" class="slider">
+                            <span id="blurValue">0px</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Screen Shake:</label>
+                            <input type="range" id="screenShake" min="0" max="20" step="1" value="0" class="slider">
+                            <span id="shakeValue">0px</span>
+                        </div>
+                    </div>
+
+                    <!-- Popup Creator Tab -->
+                    <div class="tab-content" id="popup-tab">
+                        <h3>Popup Title</h3>
+                        <input type="text" class="form-input" id="popupTitle" placeholder="Enter popup title...">
+
+                        <h3>Popup Message</h3>
+                        <textarea class="form-input" id="popupMessage" placeholder="Enter popup message..." rows="4"></textarea>
+
+                        <h3>Popup Size</h3>
+                        <div class="control-group">
+                            <label>Width:</label>
+                            <input type="range" id="popupWidth" min="200" max="800" step="50" value="400" class="slider">
+                            <span id="popupWidthValue">400px</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Height:</label>
+                            <input type="range" id="popupHeight" min="150" max="600" step="50" value="250" class="slider">
+                            <span id="popupHeightValue">250px</span>
+                        </div>
+
+                        <h3>Styling</h3>
+                        <div class="control-group">
+                            <label>Text Color:</label>
+                            <input type="color" id="popupTextColor" value="#ffffff" class="color-picker">
+                        </div>
+                        <div class="control-group">
+                            <label>Background Color:</label>
+                            <input type="color" id="popupBgColor" value="#1a1a1a" class="color-picker">
+                        </div>
+                        <div class="control-group">
+                            <label>Border Color:</label>
+                            <input type="color" id="popupBorderColor" value="#00ff00" class="color-picker">
+                        </div>
+                        <div class="control-group">
+                            <label>Border Width:</label>
+                            <input type="range" id="popupBorderWidth" min="1" max="10" value="2" class="slider">
+                            <span id="popupBorderValue">2px</span>
+                        </div>
+
+                        <h3>Opening Animation</h3>
+                        <div class="control-group">
+                            <select class="form-select" id="popupAnimation">
+                                <option value="none">None</option>
+                                <option value="fade">Fade In</option>
+                                <option value="scale">Scale Up</option>
+                                <option value="slide">Slide In</option>
+                                <option value="bounce">Bounce In</option>
+                            </select>
+                        </div>
+
+                        <h3>Popup Count</h3>
+                        <div class="control-group">
+                            <input type="range" id="popupCount" min="1" max="8" step="1" value="1" class="slider">
+                            <span id="popupCountValue">1</span>
+                        </div>
+
+                        <h3>Popup Style</h3>
+                        <div class="control-group">
+                            <select class="form-select" id="popupStyle">
+                                <option value="modern">Modern</option>
+                                <option value="classic">Classic Window</option>
+                                <option value="floating">Floating</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group checkbox-group">
+                            <label><input type="checkbox" id="popupSequence"> Open one after another</label>
+                        </div>
+
+                        <h3>Follow-up Popup Chain</h3>
+                        <div class="control-group checkbox-group">
+                            <label><input type="checkbox" id="enableFollowup"> Enable Follow-up</label>
+                        </div>
+
+                        <div class="control-group checkbox-group">
+                            <label><input type="checkbox" id="followupAfterAll"> Trigger follow-ups after all popups closed</label>
+                        </div>
+
+                        <div id="followupSection" style="display: none;">
+                            <h3>Follow-up Settings</h3>
+                            <div id="followupList"></div>
+                            <div style="margin-top:8px;">
+                                <button type="button" class="btn-small" id="addFollowupBtn">+ Add Follow-up</button>
+                            </div>
+                            <p style="font-size:12px; color:#bfc9dd; margin-top:8px;">Each follow-up will show when the previous popup is closed.</p>
+                        </div>
+
+                        <button class="btn-primary" id="launchPopupBtn" style="width: 100%; margin-top: 20px;">🚀 Launch Popup</button>
+                    </div>
+
+                    <!-- Templates Tab -->
+                    <div class="tab-content" id="templates-tab">
+                        <h3>Popup Templates</h3>
+                        <div class="templates-grid">
+                            <button class="template-btn" data-template="hello">
+                                <span class="template-icon">👋</span>
+                                <span class="template-name">Hello World</span>
+                            </button>
+                            <button class="template-btn" data-template="warning">
+                                <span class="template-icon">⚠️</span>
+                                <span class="template-name">Warning</span>
+                            </button>
+                            <button class="template-btn" data-template="success">
+                                <span class="template-icon">✅</span>
+                                <span class="template-name">Success</span>
+                            </button>
+                            <button class="template-btn" data-template="error">
+                                <span class="template-icon">❌</span>
+                                <span class="template-name">Error</span>
+                            </button>
+                            <button class="template-btn" data-template="meme">
+                                <span class="template-icon">🤣</span>
+                                <span class="template-name">Meme</span>
+                            </button>
+                            <button class="template-btn" data-template="info">
+                                <span class="template-icon">ℹ️</span>
+                                <span class="template-name">Info</span>
+                            </button>
+                        </div>
+
+                        <h3 style="margin-top: 30px;">Saved Presets</h3>
+                        <div id="presetsContainer">
+                            <p class="empty-state">No saved presets yet</p>
+                        </div>
+
+                        <h3>Save Current Configuration</h3>
+                        <div class="control-group">
+                            <input type="text" class="form-input" id="presetName" placeholder="Enter preset name...">
+                            <button class="btn-primary" id="savePresetBtn" style="margin-top: 10px;">💾 Save Preset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Container -->
+    <div id="popupContainer"></div>
+
+    <!-- Modal for import -->
+    <input type="file" id="importFile" style="display: none;" accept=".json">
+
+    <script src="script.js"></script>
+</body>
+</html>
