@@ -4,7 +4,7 @@
 Text Flash Animator is a modern, single-page web application that allows users to create stunning text animations and customizable popup messages entirely through an easy-to-use interface. No backend required - everything runs in the browser!
 
 ## Project Location
-📁 `C:\Users\migue\TextFlashAnimator\`
+📁 `C:\Users\name\TextFlashAnimator\`
 
 Files:
 - `index.html` - Main HTML structure
@@ -16,7 +16,7 @@ Files:
 ### Opening the Application
 Simply open the `index.html` file in any modern web browser:
 ```
-file:///C:/Users/migue/TextFlashAnimator/index.html
+file:///C:/Users/name/TextFlashAnimator/index.html
 ```
 
 ## Core Features Implemented
